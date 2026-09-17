@@ -1,1 +1,53 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ASF Ponto — Quem está em qual pico agora | ASF</title><meta name="description" content="Check-in ao vivo: veja em qual pico as surfistas da comunidade ASF estão agora e marque o seu. Satélite do app ASF."><link rel="canonical" href="https://acarolmourad-commits.github.io/asf-ponto/"><meta name="theme-color" content="#00A8CC"><style>:root{--p:#00A8CC;--d:#0E2439;--u:#9B59B6;--bg:#F7FBFC;--g:#5A6B7A}*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--d)}nav{position:sticky;top:0;background:#fff;border-bottom:1px solid #E5EEF2;padding:10px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}nav a{color:var(--p);text-decoration:none;font-weight:700;font-size:13px}nav a.on{color:var(--u)}header{background:linear-gradient(135deg,var(--p),var(--u));color:#fff;padding:40px 20px 30px;text-align:center}.wrap{max-width:640px;margin:0 auto;padding:24px 16px 60px}.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(14,36,57,.06)}select,input[type=text]{width:100%;padding:10px;border:2px solid var(--p);border-radius:10px;font-size:15px;margin:6px 0;font-family:inherit}button.salvar{background:linear-gradient(135deg,var(--p),var(--u));color:#fff;border:0;padding:11px 20px;border-radius:999px;font-weight:700;cursor:pointer}.pico{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #EEF3F5;font-size:14.5px}.muted{color:var(--g);font-size:12.5px}footer{text-align:center;font-size:12.5px;color:var(--g);padding:24px;border-top:1px solid #E5EEF2}</style></head><body><nav><a href="https://acarolmourad-commits.github.io/asf-app/">🏄 App</a><a class="on" href="https://acarolmourad-commits.github.io/asf-ponto/">📍 Ponto</a><a href="https://acarolmourad-commits.github.io/asf-mapa/">🗺️ Mapa</a><a href="https://acarolmourad-commits.github.io/asf-carona/">🚗 Carona</a><a href="https://acarolmourad-commits.github.io/asf-comunidade/">🤝 Comunidade</a></nav><header><h1>📍 Quem tá no pico?</h1><p>Check-in da comunidade: marque onde você está e encontre as manas.</p></header><main class="wrap"><div class="card"><input type="text" id="nome" placeholder="Seu nome ou apelido" maxlength="30"><select id="praia"><option>Praia da Baleia</option><option>Camburizinho</option><option>Maresias</option><option>Juquehy</option><option>Itamambuca</option><option>Perequê-Açu</option><option>Boracéia</option><option>Brava (Caraguá)</option></select><button class="salvar" onclick="checkin()">Fazer check-in 🏄‍♀️</button></div><div class="card"><h2 style="font-size:15.5px;margin-bottom:8px">No pico agora (demo local)</h2><div id="lista"></div></div><p class="muted">Dados ficam no seu navegador (demo). Combine sessões pela <a href="https://acarolmourad-commits.github.io/asf-comunidade/" style="color:var(--p)">Comunidade</a> e veja as condições no <a href="https://acarolmourad-commits.github.io/asf-previsao/" style="color:var(--p)">ASF Previsão</a>.</p></main><footer>🌊 ASF · <a href="https://acarolmourad-commits.github.io/" style="color:var(--p)">Hub de apps</a></footer><script>const K='asf-ponto-v1';let d=JSON.parse(localStorage.getItem(K)||'[]');function render(){const por={};d.forEach(x=>por[x.p]=(por[x.p]||0)+1);const l=document.getElementById('lista');l.innerHTML='';const ks=Object.keys(por);if(!ks.length){l.innerHTML='<div class="muted">Ninguém marcou ainda — seja a primeira! 🌊</div>';return;}ks.sort((a,b)=>por[b]-por[a]).forEach(p=>l.insertAdjacentHTML('beforeend',`<div class="pico"><span>${p}</span><strong>${por[p]}🏄‍♀️</strong></div>`));}function checkin(){const n=document.getElementById('nome').value.trim();if(!n)return alert('Diga seu nome ou apelido!');d.push({n,p:document.getElementById('praia').value,t:Date.now()});localStorage.setItem(K,JSON.stringify(d));render();}render();</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASF Ponto — ASF</title>
+<meta name="description" content="Check-in ao vivo: quem está em qual pico agora">
+<style>
+:root{--rosa:#ff4d8d;--roxo:#7b2ff7;--areia:#fff5ec;--mar:#00c2cb}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:linear-gradient(160deg,#fff5ec,#ffe3f1 60%,#e0f7fa);min-height:100vh;color:#333}
+header{background:linear-gradient(90deg,var(--rosa),var(--roxo));color:#fff;padding:2rem 1rem;text-align:center}
+header h1{font-size:2rem} header p{opacity:.9;margin-top:.4rem}
+nav{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;padding:.7rem;background:#fff;box-shadow:0 2px 8px #0001;position:sticky;top:0;z-index:10}
+nav a{background:var(--areia);border:1px solid #ffd3e6;color:#c2185b;padding:.25rem .6rem;border-radius:20px;font-size:.72rem;text-decoration:none}
+nav a:hover{background:var(--rosa);color:#fff}
+main{max-width:760px;margin:1.5rem auto;padding:0 1rem}
+.card{background:#fff;border-radius:16px;padding:1.4rem;box-shadow:0 4px 16px #7b2ff720;margin-bottom:1.2rem}
+.card h2{color:var(--roxo);margin-bottom:.6rem;font-size:1.2rem}
+button{background:linear-gradient(90deg,var(--rosa),var(--roxo));color:#fff;border:none;padding:.6rem 1.2rem;border-radius:24px;font-size:1rem;cursor:pointer}
+input,select,textarea{padding:.5rem;border:1px solid #ddd;border-radius:10px;width:100%;margin:.3rem 0;font-size:1rem}
+.xp{position:fixed;bottom:1rem;right:1rem;background:#fff;border:2px solid var(--rosa);border-radius:24px;padding:.4rem 1rem;font-weight:bold;color:var(--roxo);box-shadow:0 4px 12px #0002}
+footer{text-align:center;padding:2rem;font-size:.8rem;color:#888}
+</style>
+</head>
+<body>
+<header><h1>📍 ASF Ponto</h1><p>Check-in ao vivo: quem está em qual pico agora</p></header>
+<nav><a href="https://acarolmourad-commits.github.io/asf-app/">🏄‍♀️ ASF App</a>
+<a href="https://acarolmourad-commits.github.io/">🌐 Hub</a>
+<a href="https://acarolmourad-commits.github.io/asf-ranking/">🏆 Ranking</a>
+<a href="https://acarolmourad-commits.github.io/asf-praias/">Praias</a>
+<a href="https://acarolmourad-commits.github.io/asf-previsao/">Previsão</a>
+<a href="https://acarolmourad-commits.github.io/asf-parceiras/">Parceiras</a>
+<a href="https://acarolmourad-commits.github.io/asf-sos/">SOS</a></nav>
+<main>
+<div class="card"><h2>📍 Check-in no pico agora</h2>
+<select id="pico"><option>Praia Grande</option><option>Toninhas</option><option>Maresias</option><option>Camburi</option><option>Juquehy</option><option>Itamambuca</option></select>
+<select id="nivel"><option value="vazio">🟢 Pico vazio</option><option value="medio">🟡 Movimento normal</option><option value="cheio">🔴 Pico cheio</option></select>
+<button onclick="checkin()">Check-in (+10 XP)</button></div>
+<div class="card"><h2>🌊 Quem está no mar (últimas 2h)</h2><div id="lista"></div></div>
+<div class="card"><p>Antes de entrar, confira a <a href='https://acarolmourad-commits.github.io/asf-previsao/'>ASF Previsão</a>. Emergência? <a href='https://acarolmourad-commits.github.io/asf-sos/'>ASF SOS</a>.</p></div>
+<div class="card"><h2>🌐 Ecossistema ASF</h2><p>Este app faz parte da constelação ASF — Associação de Surf Feminino. Ganhe XP aqui e veja seu progresso no <a href="https://acarolmourad-commits.github.io/asf-ranking/">ASF Ranking</a>.</p></div>
+</main>
+<div class="xp">⭐ XP: <span id="xp">0</span></div>
+<footer>ASF — Associação de Surf Feminino · Feito com 🌊 e 💜 · <a href="https://acarolmourad-commits.github.io/">hub</a></footer>
+<script>
+const XP=()=>parseInt(localStorage.getItem('asf_xp')||'0');
+function addXP(n){localStorage.setItem('asf_xp',XP()+n);document.getElementById('xp').textContent=XP();}
+document.getElementById('xp').textContent=XP();
+const IC={vazio:'🟢',medio:'🟡',cheio:'🔴'};const seed=[{p:'Maresias',n:'medio',t:Date.now()-3600000},{p:'Praia Grande',n:'vazio',t:Date.now()-1800000}];function lista(){const l=JSON.parse(localStorage.getItem('asf_ponto')||'null')||seed;return l.filter(x=>Date.now()-x.t<7200000);}function render(){const l=lista();const agg={};l.forEach(x=>{agg[x.p]=agg[x.p]||{n:0,pi:x.n};agg[x.p].n++;});document.getElementById('lista').innerHTML=Object.keys(agg).length?Object.entries(agg).map(([p,a])=>`<p>${IC[a.pi]} <b>${p}</b> — ${a.n} surfista(s) agora</p><hr>`).join(''):'Nenhum check-in nas últimas 2h. Seja a primeira! 🌊';}window.checkin=()=>{const l=lista();l.unshift({p:document.getElementById('pico').value,n:document.getElementById('nivel').value,t:Date.now()});localStorage.setItem('asf_ponto',JSON.stringify(l));render();addXP(10);};render();
+</script>
+</body>
+</html>
