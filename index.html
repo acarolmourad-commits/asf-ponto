@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASF Ponto — Quem tá no pico agora?</title>
+<meta name="description" content="Check-in ao vivo: veja quem está em cada pico de surf agora e encontre companhia para a sessão. Satélite do app ASF.">
+<link rel="canonical" href="https://acarolmourad-commits.github.io/asf-ponto/">
+<style>body{font-family:system-ui,sans-serif;margin:0;background:#ecfeff;color:#164e63}header{background:#0891b2;color:#fff;padding:2rem;text-align:center}nav{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;padding:1rem;background:#cffafe}nav a{color:#0e7490;text-decoration:none;font-size:.85rem}main{max-width:640px;margin:2rem auto;padding:0 1rem}.card{background:#fff;border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}select,input{width:100%;padding:.6rem;margin:.3rem 0;border:1px solid #67e8f9;border-radius:8px;box-sizing:border-box}button{background:#0891b2;color:#fff;border:0;border-radius:9999px;padding:.7rem 1.4rem;font-weight:700;cursor:pointer}.ci{border-left:5px solid #0891b2;padding:.8rem;margin:.5rem 0;border-radius:8px;background:#f0fdff}footer{text-align:center;padding:2rem;color:#155e75}</style>
+</head>
+<body>
+<header><h1>ASF Ponto 📍</h1><p>Quem tá no pico agora? Faça check-in e ache companhia!</p></header>
+<nav id="net"></nav>
+<main>
+<div class="card"><h2>✅ Fazer check-in</h2>
+<input id="nome" placeholder="Nome ou @instagram">
+<select id="praia"><option>Maresias</option><option>Juquehy</option><option>Camburi</option><option>Baleia</option><option>Barra do Una</option><option>Boracéia</option><option>São Sebastião</option><option>Ubatuba</option></select>
+<input id="ate" type="time" title="Fico até">
+<button onclick="checkin()">Tô no pico! 🌊</button>
+<p style="font-size:12px;color:#155e75">Check-ins expiram após 6h. Combine encontros pelo <a href="https://acarolmourad-commits.github.io/asf-parceiras/">ASF Parceiras</a> e veja condições no <a href="https://acarolmourad-commits.github.io/asf-alerta/">ASF Alerta</a>.</p></div>
+<div class="card"><h2>👀 Quem tá no mar</h2><div id="list"></div></div>
+</main>
+<footer>ASF Ponto — satélite do <a href="https://acarolmourad-commits.github.io/asf-app/">app ASF</a></footer>
+<script>
+const SITES=[["asf-app","App ASF"],["asf-praias","Praias"],["asf-previsao","Previsão"],["asf-mare","Maré"],["asf-mapa","Mapa"],["asf-alerta","Alerta"],["asf-sos","SOS"],["asf-treino","Treino"],["asf-manobras","Manobras"],["asf-apnea","Apneia"],["asf-respira","Respira"],["asf-yoga","Yoga"],["asf-bemestar","Bem-Estar"],["asf-mental","Mental"],["asf-nutricao","Nutrição"],["asf-volume","Volume"],["asf-equipamento","Equipamento"],["asf-eventos","Eventos"],["asf-glossario","Glossário"],["asf-historia","História"],["asf-kids","Kids"],["asf-comunidade","Comunidade"],["asf-parceiras","Parceiras"],["asf-carona","Carona"],["asf-mercado","Mercado"],["asf-viagens","Viagens"],["asf-galeria","Galeria"],["asf-goldenhour","Golden Hour"],["asf-quiz","Quiz"],["asf-ranking","Ranking"],["asf-diario","Diário"],["asf-eco","Eco"],["asf-desafio","Desafio"],["asf-sonhos","Sonhos"],["asf-clube","Clube"]];
+document.getElementById('net').innerHTML=SITES.map(s=>`<a href="https://acarolmourad-commits.github.io/${s[0]}/">${s[1]}</a>`).join('');
+const K='asf-ponto';
+function load(){return JSON.parse(localStorage.getItem(K)||'[]').filter(x=>Date.now()-x.t<6*36e5);}
+function render(){const l=load();document.getElementById('list').innerHTML=l.length?l.map(x=>`<div class="ci"><b>${x.nome}</b> está em <b>${x.praia}</b> até ~${x.ate||'18:00'}<br><small>${new Date(x.t).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</small></div>`).join(''):'<p>Ninguém fez check-in ainda. Seja a primeira no pico! 🏄‍♀️</p>';}
+function checkin(){const n=document.getElementById('nome').value.trim();if(!n)return alert('Informe seu nome!');const l=load();l.unshift({nome:n,praia:document.getElementById('praia').value,ate:document.getElementById('ate').value,t:Date.now()});localStorage.setItem(K,JSON.stringify(l.slice(0,50)));render();}
+render();
+</script>
+</body>
+</html>
