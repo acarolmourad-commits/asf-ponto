@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASF Ponto — ASF</title>
-<meta name="description" content="Check-in ao vivo: quem está em qual pico agora">
+<meta name="description" content="Check-in no pico + condições reais e atuais do mar: altura, período, vento e melhor janela do dia em cada praia. Satélite do app ASF.">
 <link rel="canonical" href="https://acarolmourad-commits.github.io/asf-ponto/">
 <style>
 :root{--rosa:#ff4d8d;--roxo:#7b2ff7;--areia:#fff5ec;--mar:#00c2cb}
@@ -21,6 +21,13 @@ main{max-width:760px;margin:1.5rem auto;padding:0 1rem}
 button{background:linear-gradient(90deg,var(--rosa),var(--roxo));color:#fff;border:none;padding:.6rem 1.2rem;border-radius:24px;font-size:1rem;cursor:pointer}
 input,select,textarea{padding:.5rem;border:1px solid #ddd;border-radius:10px;width:100%;margin:.3rem 0;font-size:1rem}
 .xp{position:fixed;bottom:1rem;right:1rem;background:#fff;border:2px solid var(--rosa);border-radius:24px;padding:.4rem 1rem;font-weight:bold;color:var(--roxo);box-shadow:0 4px 12px #0002}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:10px}
+.stat{background:#faf6ff;border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:17px;color:#333}
+.stat span{font-size:11px;color:#777}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;color:#fff}
+.ok{background:#2ECC71}.mid{background:#F4D03F;color:#333}.low{background:#8a93a0}
+.muted{color:#777;font-size:12.5px}
 footer{text-align:center;padding:2rem;font-size:.8rem;color:#888}
 </style>
 <script type="application/ld+json">
@@ -28,7 +35,7 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:#888}
 </script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="ASF Ponto — ASF">
-<meta property="og:description" content="Check-in ao vivo: quem está em qual pico agora">
+<meta property="og:description" content="Check-in no pico + condições reais e atuais do mar em cada praia">
 <meta property="og:url" content="https://acarolmourad-commits.github.io/asf-ponto/">
 <meta property="og:image" content="https://acarolmourad-commits.github.io/thumbnails/asf-ponto.jpg">
 <meta property="og:image:width" content="1200">
@@ -38,24 +45,86 @@ footer{text-align:center;padding:2rem;font-size:.8rem;color:#888}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1643806355443576" crossorigin="anonymous"></script>
 </head>
 <body>
-<header><h1>📍 ASF Ponto</h1><p>Check-in ao vivo: quem está em qual pico agora</p></header>
+<header><h1>📍 ASF Ponto</h1><p>Check-in no pico + condições reais do mar agora em cada praia</p></header>
 
 <main>
+<div class="card"><h2>🌊 Condições reais agora por pico</h2>
+<p class="muted">Dados ao vivo (Open-Meteo Marine, atualizado a cada 6h). Escolha o pico e veja como está o mar <b>neste momento</b>:</p>
+<select id="spotLive"></select>
+<div id="live"><p class="muted" style="margin-top:8px">Carregando condições…</p></div>
+</div>
+
 <div class="card"><h2>📍 Check-in no pico agora</h2>
-<select id="pico"><option>Praia Grande</option><option>Toninhas</option><option>Maresias</option><option>Camburi</option><option>Juquehy</option><option>Itamambuca</option></select>
-<select id="nivel"><option value="vazio">🟢 Pico vazio</option><option value="medio">🟡 Movimento normal</option><option value="cheio">🔴 Pico cheio</option></select>
-<button onclick="checkin()">Check-in (+10 XP)</button></div>
+<select id="pico"></select>
+<select id="nivel"><option value="vazio">🧢 Pico vazio</option><option value="medio">🌡️ Movimento normal</option><option value="cheio">🔔 Pico cheio</option></select>
+<select id="sessao"><option value="surfando">🏄‍♀️ Estou surfando</option><option value="entrando">🌊 Entrando agora</option><option value="saindo">👋 Saindo da água</option></select>
+<button onclick="checkin()">Check-in (+10 XP)</button>
+<p class="muted" style="margin-top:8px">O check-in fica visível por 2h neste dispositivo e ajuda outras manas a escolherem o pico.</p></div>
+
 <div class="card"><h2>🌊 Quem está no mar (últimas 2h)</h2><div id="lista"></div></div>
+
+<div class="card"><h2>⏰ Como escolher a melhor janela hoje</h2>
+<p style="font-size:13.5px;line-height:1.6">1️⃣ <b>Período manda:</b> swell com ≥ 10s traz ondas organizadas e com força.<br>2️⃣ <b>Vento terral de manhã</b> (offshore) deixa a onda limpa; a brisa maral da tarde desmancha.<br>3️⃣ <b>Maré:</b> cada pico tem sua maré ideal — veja os horários no <a href="https://acarolmourad-commits.github.io/asf-mare/">ASF Maré</a>.<br>4️⃣ <b>Direção do swell vs. exposição da praia:</b> quanto mais alinhado, mais o pico acende — confira na <a href="https://acarolmourad-commits.github.io/asf-swell/">Matemática do Surf</a>.</p></div>
+
 <div class="card"><p>Antes de entrar, confira a <a href='https://acarolmourad-commits.github.io/asf-previsao/'>ASF Previsão</a>. Emergência? <a href='https://acarolmourad-commits.github.io/asf-sos/'>ASF SOS</a>.</p></div>
 <div class="card"><h2>🌐 Ecossistema ASF</h2><p>Este app faz parte da constelação ASF — Associação de Surf Feminino. Ganhe XP aqui e veja seu progresso no <a href="https://acarolmourad-commits.github.io/asf-ranking/">ASF Ranking</a>.</p></div>
 </main>
 <div class="xp">⭐ XP: <span id="xp">0</span></div>
 <footer>ASF — Associação de Surf Feminino · Feito com 🌊 e 💜 · <a href="https://acarolmourad-commits.github.io/">hub</a></footer>
 <script>
+const SPOTS=[
+{n:"Praia Grande",lat:-24.00,lon:-46.41,face:170},
+{n:"Toninhas (Ubatuba)",lat:-23.53,lon:-45.09,face:150},
+{n:"Maresias",lat:-23.65,lon:-45.55,face:160},
+{n:"Camburi",lat:-23.58,lon:-45.63,face:150},
+{n:"Juquehy",lat:-23.52,lon:-45.43,face:150},
+{n:"Itamambuca",lat:-23.40,lon:-45.01,face:140}
+];
+const DIRS=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];
+const comp=d=>DIRS[Math.round(d/22.5)%16];
+const selL=document.getElementById('spotLive'),selC=document.getElementById('pico');
+SPOTS.forEach((s,i)=>{[selL,selC].forEach(sel=>{const o=document.createElement('option');o.value=i;o.textContent=s.n;sel.appendChild(o)})});
+selL.value=localStorage.getItem('asf_ponto_spot')||2; selC.value=selL.value;
+selL.onchange=()=>{localStorage.setItem('asf_ponto_spot',selL.value);selC.value=selL.value;live()};
+function qual(sh,sp){if(sp>=10&&sh>=0.6)return["Pico aceso 🔥","ok"];if(sp>=7)return["Surfável — observe as séries","mid"];return["Fraco/curto — bom p/ aprender","low"]}
+async function live(){
+const s=SPOTS[selL.value];const box=document.getElementById('live');
+box.innerHTML='<p class="muted" style="margin-top:8px">Carregando condições…</p>';
+try{
+const u=`https://marine-api.open-meteo.com/v1/marine?latitude=${s.lat}&longitude=${s.lon}&hourly=wave_height,wave_period,wave_direction,swell_wave_height,swell_wave_period,swell_wave_direction&forecast_days=2&timezone=America%2FSao_Paulo`;
+const j=await(await fetch(u)).json();const H=j.hourly;
+const i=Math.max(0,H.time.findIndex(t=>new Date(t)>=new Date()));
+const wh=H.wave_height[i],wp=H.wave_period[i],wd=H.wave_direction[i],sh=H.swell_wave_height[i],sp=H.swell_wave_period[i],sd=H.swell_wave_direction[i];
+const[qt,qc]=qual(sh,sp);
+const diff=Math.abs(((sd-s.face)%360+540)%360-180);
+// melhor janela de hoje: maior score altura*periodo alinhado
+let best=i,bs=-1;
+H.time.forEach((t,ix)=>{const dt=new Date(t);if(dt<new Date()||dt.getDate()!==new Date().getDate())return;
+const a=Math.max(0,Math.cos(Math.abs(((H.swell_wave_direction[ix]-s.face)%360+540)%360-180)*Math.PI/180));
+const sc=a*(H.swell_wave_height[ix]||0)*Math.min((H.swell_wave_period[ix]||0)/12,1);
+if(sc>bs){bs=sc;best=ix}});
+const bh=new Date(H.time[best]).getHours();
+box.innerHTML=`<div class="stats">
+<div class="stat"><b>${wh?.toFixed(1)??'—'} m</b><span>Altura agora</span></div>
+<div class="stat"><b>${wp?.toFixed(0)??'—'} s</b><span>Período</span></div>
+<div class="stat"><b>${comp(wd??0)} (${Math.round(wd??0)}°)</b><span>Direção</span></div>
+<div class="stat"><b>${sh?.toFixed(1)??'—'} m / ${sp?.toFixed(0)??'—'} s</b><span>Swell principal</span></div>
+<div class="stat"><b><span class="badge ${qc}">${qt}</span></b><span>Leitura p/ ${s.n}</span></div>
+<div class="stat"><b>${bh}h–${bh+2}h</b><span>Melhor janela hoje</span></div>
+</div>
+<p class="muted" style="margin-top:8px">${diff<45?'✅ Swell alinhado com a exposição da praia — o pico tende a acender.':diff<90?'➖ Swell parcialmente alinhado — procure as bancadas certas.':'❌ Swell desalinhado com essa praia — compare outros picos da lista.'}</p>`;
+}catch(e){box.innerHTML='<p class="muted" style="margin-top:8px">⚠️ Não foi possível carregar agora. Tente novamente em instantes.</p>'}
+}
+live();
 const XP=()=>parseInt(localStorage.getItem('asf_xp')||'0');
 function addXP(n){localStorage.setItem('asf_xp',XP()+n);document.getElementById('xp').textContent=XP();}
 document.getElementById('xp').textContent=XP();
-const IC={vazio:'🟢',medio:'🟡',cheio:'🔴'};const seed=[{p:'Maresias',n:'medio',t:Date.now()-3600000},{p:'Praia Grande',n:'vazio',t:Date.now()-1800000}];function lista(){const l=JSON.parse(localStorage.getItem('asf_ponto')||'null')||seed;return l.filter(x=>Date.now()-x.t<7200000);}function render(){const l=lista();const agg={};l.forEach(x=>{agg[x.p]=agg[x.p]||{n:0,pi:x.n};agg[x.p].n++;});document.getElementById('lista').innerHTML=Object.keys(agg).length?Object.entries(agg).map(([p,a])=>`<p>${IC[a.pi]} <b>${p}</b> — ${a.n} surfista(s) agora</p><hr>`).join(''):'Nenhum check-in nas últimas 2h. Seja a primeira! 🌊';}window.checkin=()=>{const l=lista();l.unshift({p:document.getElementById('pico').value,n:document.getElementById('nivel').value,t:Date.now()});localStorage.setItem('asf_ponto',JSON.stringify(l));render();addXP(10);};render();
+const IC={vazio:'🧢',medio:'🌡️',cheio:'🔔'};const SS={surfando:'🏄‍♀️',entrando:'🌊',saindo:'👋'};
+const seed=[{p:'Maresias',n:'medio',s:'surfando',t:Date.now()-3600000},{p:'Praia Grande',n:'vazio',s:'entrando',t:Date.now()-1800000}];
+function lista(){const l=JSON.parse(localStorage.getItem('asf_ponto')||'null')||seed;return l.filter(x=>Date.now()-x.t<7200000);}
+function render(){const l=lista();const agg={};l.forEach(x=>{agg[x.p]=agg[x.p]||{n:0,pi:x.n,si:x.s};agg[x.p].n++;});document.getElementById('lista').innerHTML=Object.keys(agg).length?Object.entries(agg).map(([p,a])=>`<p>${IC[a.pi]} ${SS[a.si]} <b>${p}</b> — ${a.n} surfista(s) agora</p><hr>`).join(''):'Nenhum check-in nas últimas 2h. Seja a primeira! 🌊';}
+window.checkin=()=>{const l=lista();l.unshift({p:SPOTS[selC.value].n,n:document.getElementById('nivel').value,s:document.getElementById('sessao').value,t:Date.now()});localStorage.setItem('asf_ponto',JSON.stringify(l));render();addXP(10);};
+render();
 </script>
 <footer style="text-align:center;padding:18px 12px;font-size:12px;color:#567;background:transparent">ASF — Associação de Surf Feminino · <a href="https://acarolmourad-commits.github.io/asf-app/privacidade.html" style="color:#00A8CC">Privacidade</a> · <a href="https://acarolmourad-commits.github.io/asf-app/cookies.html" style="color:#00A8CC">Cookies</a> · <a href="https://acarolmourad-commits.github.io/asf-app/termos-de-uso.html" style="color:#00A8CC">Termos</a></footer>
 <script src="https://acarolmourad-commits.github.io/asf-app/asf-network.js" defer></script>
